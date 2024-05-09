@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { FoodCard } from '@/components/molecules'
+import { FoodList } from '@/components/organisms'
 
 export const HomeTemplate = () => {
   return (
-    <div>
-      <FoodCard />
+    <div className="container-lg mx-auto max-w-7xl">
+      <FoodList />
     </div>
   )
 }

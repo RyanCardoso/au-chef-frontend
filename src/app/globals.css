@@ -22,15 +22,10 @@
   margin: 0;
 }
 
-/* body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-} */
+body {
+  /* color: rgb(var(--foreground-rgb)); */
+  background: #f5f5f5;
+}
 
 @layer utilities {
   .text-balance {
