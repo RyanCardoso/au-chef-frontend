@@ -1,88 +1,102 @@
+'use client'
+
 import React from 'react'
-import { Button, Input, Select, TextArea } from '@/components/atoms'
+import { useForm, FormProvider } from 'react-hook-form'
+
+import { Button, Dropzone, Input, Select, TextArea } from '@/components/atoms'
+import { categoryOptions, menuOptions, schema } from './helpers'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+interface FoodFormData {
+  menu: string
+  category: string
+  name: string
+  description: string
+  price: string
+  discount?: string
+  image: FileList | string
+}
 
 export const FoodForm = () => {
+  const methods = useForm<FoodFormData>({ resolver: yupResolver(schema) })
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = methods
+
+  const onsubmit = handleSubmit((data) => {
+    console.log(data)
+  })
+
+  console.log(errors)
+
   return (
-    <form className="mx-auto my-8 max-w-7xl rounded-lg bg-white p-8">
-      <div className="flex justify-between gap-x-20">
-        <div className="flex-1">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-8 pb-12 sm:grid-cols-6">
-            <Select
-              label="Categória"
-              options={[
-                { value: '1', label: 'Espaguete' },
-                { value: '2', label: 'Feijoada' },
-                { value: '3', label: 'Churrasco' },
-                { value: '4', label: 'Salada' },
-              ]}
-            />
+    <FormProvider {...methods}>
+      <form className="rounded-lg bg-white p-8" onSubmit={onsubmit}>
+        <div className="flex justify-between gap-x-20">
+          <div className="flex-1">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-8 pb-12 sm:grid-cols-6">
+              <Select
+                label="Cardápio"
+                options={menuOptions}
+                {...register('menu')}
+                error={errors.menu?.message}
+              />
 
-            <Input
-              label="Nome"
-              placeholder="Nome do seu prato"
-              name="first-name"
-              id="first-name"
-              autoComplete="given-name"
-            />
+              <Select
+                label="Categória"
+                options={categoryOptions}
+                {...register('category')}
+                error={errors.category?.message}
+              />
 
-            <Input
-              label="Preço"
-              placeholder="Preço do seu prato"
-              className="col-start-1 col-end-4"
-            />
+              <Input
+                label="Nome"
+                placeholder="Nome do seu prato"
+                {...register('name')}
+                error={errors.name?.message}
+              />
 
-            <Input
-              label="Desconto"
-              placeholder="Desconto"
-              className="col-start-4 col-end-7"
-            />
+              <Input
+                label="Preço"
+                placeholder="Preço do seu prato"
+                className="col-start-1 col-end-4"
+                {...register('price')}
+                error={errors.price?.message}
+              />
 
-            <TextArea label="Descricão" placeholder="Descreva o seu prato" />
-          </div>
-        </div>
+              <Input
+                label="Desconto"
+                placeholder="Desconto"
+                className="col-start-4 col-end-7"
+                {...register('discount')}
+              />
 
-        <div className="w-80">
-          <div className="col-span-full">
-            <label
-              htmlFor="cover-photo"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Imagem
-            </label>
-            <div className="mt-2 flex items-center justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-              <div className="text-center">
-                {/* <PhotoIcon
-                    className="mx-auto h-12 w-12 text-gray-300"
-                    aria-hidden="true"
-                  /> */}
-                <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                  <label
-                    htmlFor="file-upload"
-                    className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                  >
-                    <span>Selecione</span>
-                    <input
-                      id="file-upload"
-                      name="file-upload"
-                      type="file"
-                      className="sr-only"
-                    />
-                  </label>
-                  <p className="pl-1">ou arraste e solte aqui</p>
-                </div>
-                <p className="text-xs leading-5 text-gray-600">
-                  PNG, JPG até 10MB
-                </p>
-              </div>
+              <TextArea
+                label="Descricão"
+                placeholder="Descreva o seu prato"
+                {...register('description')}
+                error={errors.description?.message}
+              />
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 pt-6">
-        <Button label="Cancelar" variant="secondary" type="button" />
-        <Button label="Salvar" type="submit" />
-      </div>
-    </form>
+          <div className="h-80 w-80">
+            <Dropzone
+              label="Imagem"
+              {...register('image')}
+              error={errors.image?.message}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 pt-6">
+          <Button label="Cancelar" variant="secondary" type="button" />
+          <Button label="Salvar" type="submit" />
+        </div>
+      </form>
+    </FormProvider>
   )
 }
