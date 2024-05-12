@@ -2,10 +2,12 @@
 
 import React from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
-
-import { Button, Dropzone, Input, Select, TextArea } from '@/components/atoms'
-import { categoryOptions, menuOptions, schema } from './helpers'
 import { yupResolver } from '@hookform/resolvers/yup'
+
+import { maskPrice } from '@/utils'
+import { Button, Dropzone, Input, Select, TextArea } from '@/components/atoms'
+
+import { categoryOptions, menuOptions, schema } from './helpers'
 
 interface FoodFormData {
   menu: string
@@ -25,6 +27,14 @@ export const FoodForm = () => {
     handleSubmit,
     formState: { errors },
   } = methods
+
+  const formatMask = (
+    ev: React.ChangeEvent<HTMLInputElement>,
+    mask: (ev: string) => string,
+  ) => {
+    const { value } = ev.target
+    ev.target.value = mask(value)
+  }
 
   const onsubmit = handleSubmit((data) => {
     console.log(data)
@@ -63,7 +73,9 @@ export const FoodForm = () => {
                 label="Preço"
                 placeholder="Preço do seu prato"
                 className="col-start-1 col-end-4"
-                {...register('price')}
+                {...register('price', {
+                  onChange: (ev) => formatMask(ev, maskPrice),
+                })}
                 error={errors.price?.message}
               />
 

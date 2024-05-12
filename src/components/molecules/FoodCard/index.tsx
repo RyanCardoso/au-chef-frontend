@@ -1,18 +1,13 @@
 import React from 'react'
 import Image from 'next/image'
 
+import { maskPrice } from '@/utils'
+
 interface FoodCardProps {
   title: string
   description: string
   price: number
   img: string
-}
-
-const maskPrice = (price: number) => {
-  return price.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  })
 }
 
 export const FoodCard = ({ title, description, price, img }: FoodCardProps) => {
