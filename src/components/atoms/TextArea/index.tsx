@@ -9,7 +9,7 @@ interface TextAreaProps extends InputHTMLAttributes<HTMLTextAreaElement> {
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ label, error, ...props }, ref) => {
     return (
-      <div className="col-span-full">
+      <div className="w-full">
         <label
           htmlFor="about"
           className="block text-sm font-medium leading-6 text-gray-900"

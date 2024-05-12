@@ -1,25 +1,28 @@
 import React, { InputHTMLAttributes, forwardRef } from 'react'
 
+type OptionType = { label: string; value: string }
+
 interface SelectProps extends InputHTMLAttributes<HTMLSelectElement> {
   label: string
+  className?: string
   placeholder?: string
-  options: {
-    value: string
-    label: string
-  }[]
+  options: OptionType[]
   error?: string
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, placeholder = 'Selecione', options, error, ...props }, ref) => {
+  (
+    { label, className, placeholder = 'Selecione', options, error, ...props },
+    ref,
+  ) => {
     return (
-      <div className="sm:col-span-3">
+      <div className={`w-full ${className}`}>
         <label className="block text-sm font-medium leading-6 text-gray-900">
           {label}
           <div className="mt-2">
             <select
               ref={ref}
-              className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm outline-none ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm outline-none ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               defaultValue=""
               {...props}
             >

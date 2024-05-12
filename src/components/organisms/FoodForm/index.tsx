@@ -45,10 +45,11 @@ export const FoodForm = () => {
   return (
     <FormProvider {...methods}>
       <form className="rounded-lg bg-white p-8" onSubmit={onsubmit}>
-        <div className="flex justify-between gap-x-20">
+        <div className="flex flex-col justify-between gap-x-20 pb-8 md:flex-row md:pb-0">
           <div className="flex-1">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 pb-12 sm:grid-cols-6">
+            <div className="flex flex-col flex-wrap justify-between gap-x-6 gap-y-8 pb-8 md:flex-row md:pb-12">
               <Select
+                className="md:w-[45%]"
                 label="Cardápio"
                 options={menuOptions}
                 {...register('menu')}
@@ -56,6 +57,7 @@ export const FoodForm = () => {
               />
 
               <Select
+                className="md:w-[45%]"
                 label="Categória"
                 options={categoryOptions}
                 {...register('category')}
@@ -72,7 +74,7 @@ export const FoodForm = () => {
               <Input
                 label="Preço"
                 placeholder="Preço do seu prato"
-                className="col-start-1 col-end-4"
+                className="md:w-[45%]"
                 {...register('price', {
                   onChange: (ev) => formatMask(ev, maskPrice),
                 })}
@@ -82,7 +84,7 @@ export const FoodForm = () => {
               <Input
                 label="Desconto"
                 placeholder="Desconto"
-                className="col-start-4 col-end-7"
+                className="md:w-[45%]"
                 {...register('discount')}
               />
 
@@ -95,7 +97,7 @@ export const FoodForm = () => {
             </div>
           </div>
 
-          <div className="h-80 w-80">
+          <div className="w-80">
             <Dropzone
               label="Imagem"
               {...register('image')}
