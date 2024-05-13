@@ -9,8 +9,6 @@ export const schema = yup
     image: yup
       .mixed<File | string>()
       .test('is-image-or-string', msg, (value) => {
-        console.log(value)
-
         return (value && typeof value === 'string') || value instanceof File
       })
       .required(msg),
