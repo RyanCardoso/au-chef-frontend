@@ -355,7 +355,4 @@ export const dataCategory = [
   'Feijoada',
   'Arroz',
   'Churrasco',
-  'Salada',
-  'Risoto',
-  'Churrasco',
 ]

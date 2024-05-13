@@ -13,7 +13,7 @@ export const Menu = () => {
         <li key={option.name + option.path}>
           <Link
             href={option.path}
-            className={`rounded px-2 py-1 text-base font-bold text-[#ffffff] ${pathname === option.path ? 'bg-white text-[#ea1d2c]' : ''}`}
+            className={`rounded px-2 py-1 text-base font-bold ${pathname === option.path ? 'bg-white text-[#ea1d2c]' : 'text-[#ffffff]'}`}
           >
             {option.name}
           </Link>

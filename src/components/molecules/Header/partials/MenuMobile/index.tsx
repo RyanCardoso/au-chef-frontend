@@ -21,13 +21,13 @@ export const MenuMobile = ({ isMenuOpen, onClose }: MenuMobileProps) => {
           className="h-10 w-10"
           fill="none"
           viewBox="0 0 24 24"
-          stroke-width="1.5"
+          strokeWidth="1.5"
           stroke="#ffffff"
           aria-hidden="true"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             d="M6 18L18 6M6 6l12 12"
           />
         </svg>
@@ -38,7 +38,7 @@ export const MenuMobile = ({ isMenuOpen, onClose }: MenuMobileProps) => {
           <li key={option.name + option.path}>
             <Link
               href={option.path}
-              className={`rounded px-2 py-1 text-base font-bold text-[#ffffff] ${pathname === option.path ? 'bg-white text-[#ea1d2c]' : ''}`}
+              className={`rounded px-2 py-1 text-base font-bold ${pathname === option.path ? 'bg-white text-[#ea1d2c]' : 'text-[#ffffff]'}`}
               onClick={onClose}
             >
               {option.name}
