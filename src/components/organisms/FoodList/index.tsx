@@ -4,10 +4,10 @@ import { data, dataCategory } from './helpers/data.mock'
 
 export const FoodList = () => {
   return (
-    <div className="mx-auto flex max-w-5xl flex-col justify-start gap-10">
+    <section className="mx-auto flex w-[96%] max-w-5xl flex-col justify-start gap-10">
       {dataCategory.map((category) => (
-        <div key={category}>
-          <h2 className="bg-red-500 pb-2 text-2xl">{category}</h2>
+        <div key={category} id={category}>
+          <h2 className="mb-4 text-2xl font-bold text-[#EA1D2C]">{category}</h2>
 
           <div className="flex flex-wrap justify-between gap-5">
             {data.map((food) => {
@@ -19,6 +19,6 @@ export const FoodList = () => {
           </div>
         </div>
       ))}
-    </div>
+    </section>
   )
 }
