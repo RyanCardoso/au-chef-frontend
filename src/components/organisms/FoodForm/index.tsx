@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import { useForm, FormProvider } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { maskPrice } from '@/utils'
-import { NewProductActions } from '@/firebase'
+import { CategoryActions, ProductActions } from '@/firebase'
 import { Button, Dropzone, Input, Select, TextArea } from '@/components/atoms'
 
 import { categoryOptions, menuOptions, schema } from './helpers'
@@ -24,7 +24,8 @@ interface FoodFormData {
 }
 
 export const FoodForm = () => {
-  const newProductActions = new NewProductActions()
+  const productActions = new ProductActions()
+  const categoryActions = new CategoryActions()
   const methods = useForm<FoodFormData>({ resolver: yupResolver(schema) })
   const [loading, setLoading] = useState<boolean>(false)
   const router = useRouter()
@@ -47,6 +48,16 @@ export const FoodForm = () => {
     const { value } = ev.target
     ev.target.value = mask(value)
   }
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const categories = await categoryActions.getAll()
+
+      console.log(categories)
+    }
+
+    getCategories()
+  }, [])
 
   const handleChangeDropzone = (ev: File | null) => {
     setValue('image', ev || '')
@@ -74,7 +85,7 @@ export const FoodForm = () => {
       discount: payload.discount ? Number(payload.discount) : 0,
     } as NewProductDTO
 
-    await newProductActions.create(formattedPayload)
+    await productActions.create(formattedPayload)
 
     setLoading(false)
     router.push('/')

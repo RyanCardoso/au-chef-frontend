@@ -12,7 +12,7 @@ import { db } from '@/firebase'
 
 import { NewProductDTO, ProductDTO, UpdateProductDTO } from '@/model/'
 
-export class NewProductActions {
+export class ProductActions {
   async create(payload: NewProductDTO) {
     try {
       const date = new Date()
@@ -42,7 +42,7 @@ export class NewProductActions {
 
       return { ...update, id } as ProductDTO
     } catch (error) {
-      console.error(`Error updating record: ${id}`, error)
+      console.error(`Error updating product: ${id}`, error)
       throw error
     }
   }

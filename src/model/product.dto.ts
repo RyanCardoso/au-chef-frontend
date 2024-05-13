@@ -13,6 +13,4 @@ export type ProductDTO = {
 
 export type NewProductDTO = Omit<ProductDTO, 'id' | 'createdAt' | 'updatedAt'>
 
-export type ResponseProductDTO = NewProductDTO
-
 export type UpdateProductDTO = ProductDTO
