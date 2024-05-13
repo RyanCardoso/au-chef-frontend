@@ -16,17 +16,22 @@ interface FoodFormData {
   description: string
   price: string
   discount?: string
-  image: FileList | string
+  image: File | string
 }
 
 export const FoodForm = () => {
   const methods = useForm<FoodFormData>({ resolver: yupResolver(schema) })
 
   const {
+    watch,
+    setValue,
     register,
+    clearErrors,
     handleSubmit,
     formState: { errors },
   } = methods
+
+  const imageUrl = watch('image')
 
   const formatMask = (
     ev: React.ChangeEvent<HTMLInputElement>,
@@ -36,11 +41,14 @@ export const FoodForm = () => {
     ev.target.value = mask(value)
   }
 
+  const handleChangeDropzone = (ev: File | null) => {
+    setValue('image', ev || '')
+    clearErrors('image')
+  }
+
   const onsubmit = handleSubmit((data) => {
     console.log(data)
   })
-
-  console.log(errors)
 
   return (
     <FormProvider {...methods}>
@@ -100,8 +108,9 @@ export const FoodForm = () => {
           <div className="w-80">
             <Dropzone
               label="Imagem"
-              {...register('image')}
+              onChange={handleChangeDropzone}
               error={errors.image?.message}
+              value={imageUrl}
             />
           </div>
         </div>

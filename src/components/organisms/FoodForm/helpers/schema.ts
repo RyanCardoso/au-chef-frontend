@@ -10,10 +10,10 @@ export const schema = yup
     description: yup.string().required(msg),
     price: yup.string().required(msg),
     image: yup
-      .mixed<FileList | string>()
+      .mixed<File | string>()
       .test('is-image-or-string', msg, (value) => {
         return (
-          typeof value === 'string' ||
+          (value && typeof value === 'string') ||
           (value instanceof FileList && value.length > 0)
         )
       })
