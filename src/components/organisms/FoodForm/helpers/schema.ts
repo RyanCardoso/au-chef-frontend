@@ -4,7 +4,7 @@ const msg = '*Campo obrigatório'
 
 export const schema = yup
   .object({
-    menu: yup.string().required(msg),
+    typeMenu: yup.string<'diurno' | 'noturno'>().required(msg),
     category: yup.string().required(msg),
     name: yup.string().required(msg),
     description: yup.string().required(msg),
@@ -12,10 +12,9 @@ export const schema = yup
     image: yup
       .mixed<File | string>()
       .test('is-image-or-string', msg, (value) => {
-        return (
-          (value && typeof value === 'string') ||
-          (value instanceof FileList && value.length > 0)
-        )
+        console.log(value)
+
+        return (value && typeof value === 'string') || value instanceof File
       })
       .required(msg),
   })

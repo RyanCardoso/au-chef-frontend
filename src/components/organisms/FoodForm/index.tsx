@@ -1,16 +1,20 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import axios from 'axios'
 import { useForm, FormProvider } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { maskPrice } from '@/utils'
+import { NewProductActions } from '@/firebase'
 import { Button, Dropzone, Input, Select, TextArea } from '@/components/atoms'
 
 import { categoryOptions, menuOptions, schema } from './helpers'
+import { NewProductDTO } from '@/model'
 
 interface FoodFormData {
-  menu: string
+  typeMenu: 'diurno' | 'noturno'
   category: string
   name: string
   description: string
@@ -20,7 +24,10 @@ interface FoodFormData {
 }
 
 export const FoodForm = () => {
+  const newProductActions = new NewProductActions()
   const methods = useForm<FoodFormData>({ resolver: yupResolver(schema) })
+  const [loading, setLoading] = useState<boolean>(false)
+  const router = useRouter()
 
   const {
     watch,
@@ -46,8 +53,31 @@ export const FoodForm = () => {
     clearErrors('image')
   }
 
-  const onsubmit = handleSubmit((data) => {
-    console.log(data)
+  const onsubmit = handleSubmit(async (payload) => {
+    setLoading(true)
+    const formData = new FormData()
+
+    formData.append('file', payload.image as File)
+    formData.append('upload_preset', 'z9arlc6i')
+
+    const response = await axios.post(
+      process.env.NEXT_PUBLIC_BUCKET_API as string,
+      formData,
+    )
+
+    const imageUrl = response.data.secure_url
+
+    const formattedPayload = {
+      ...payload,
+      image: imageUrl,
+      price: Number(payload.price),
+      discount: payload.discount ? Number(payload.discount) : 0,
+    } as NewProductDTO
+
+    await newProductActions.create(formattedPayload)
+
+    setLoading(false)
+    router.push('/')
   })
 
   return (
@@ -60,8 +90,8 @@ export const FoodForm = () => {
                 className="md:w-[45%]"
                 label="Cardápio"
                 options={menuOptions}
-                {...register('menu')}
-                error={errors.menu?.message}
+                {...register('typeMenu')}
+                error={errors.typeMenu?.message}
               />
 
               <Select
@@ -116,8 +146,14 @@ export const FoodForm = () => {
         </div>
 
         <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 pt-6">
-          <Button label="Cancelar" variant="secondary" type="button" />
-          <Button label="Salvar" type="submit" />
+          <Button
+            label="Cancelar"
+            variant="secondary"
+            type="button"
+            disabled={loading}
+          />
+
+          <Button label="Salvar" type="submit" loading={loading} />
         </div>
       </form>
     </FormProvider>
