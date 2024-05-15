@@ -1,18 +1,37 @@
+'use client'
+
 import React from 'react'
+
+import { useProduct } from '@/context'
+import { replaceSpaces } from '@/utils'
 import { FoodCard } from '@/components/molecules'
-import { data, dataCategory } from './helpers/data.mock'
 
 export const FoodList = () => {
+  const { loadingData, productData, currentCategories } = useProduct()
+
+  if (loadingData) return null
+
   return (
     <section className="mx-auto flex w-[96%] max-w-5xl flex-col justify-start gap-10">
-      {dataCategory.map((category) => (
-        <div key={category} id={category}>
-          <h2 className="mb-4 text-2xl font-bold text-[#EA1D2C]">{category}</h2>
+      {currentCategories().map((category) => (
+        // All category names are unique
+        <div key={category.name} id={replaceSpaces(category.name)}>
+          <h2 className="mb-4 text-2xl font-bold text-[#EA1D2C]">
+            {category.name}
+          </h2>
 
           <div className="flex flex-wrap justify-between gap-5">
-            {data.map((food) => {
-              if (food.category.includes(category))
-                return <FoodCard key={category + food.id} {...food} />
+            {productData?.map((food) => {
+              if (food.category.includes(category.name))
+                return (
+                  <FoodCard
+                    key={category.createdAt + food.createdAt}
+                    title={food.name}
+                    price={food.price}
+                    img={food.image}
+                    description={food.description}
+                  />
+                )
 
               return null
             })}

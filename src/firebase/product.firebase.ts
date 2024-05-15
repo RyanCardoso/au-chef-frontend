@@ -1,27 +1,32 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  updateDoc,
-} from 'firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 
 import { NewProductDTO, ProductDTO, UpdateProductDTO } from '@/model/'
+import { isNight } from '@/utils'
 
 export class ProductActions {
   async create(payload: NewProductDTO) {
     try {
       const date = new Date()
 
-      const docRef = await addDoc(collection(db, 'products'), {
+      const docRef = doc(db, 'products', payload.typeMenu)
+      const docSnap = await getDoc(docRef)
+
+      const formattedPayload = {
         ...payload,
         createdAt: date.toISOString(),
         updatedAt: date.toISOString(),
-      })
+      }
+
+      if (docSnap.exists()) {
+        await updateDoc(docRef, {
+          items: [...docSnap.data().items, formattedPayload],
+        })
+      } else {
+        await setDoc(docRef, {
+          items: [formattedPayload],
+        })
+      }
 
       return docRef
     } catch (error) {
@@ -49,14 +54,10 @@ export class ProductActions {
 
   async getAll(): Promise<ProductDTO[]> {
     try {
-      const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
+      const response = await getDoc(doc(db, `products/${isNight()}`))
 
-      const response = await getDocs(q)
-      const records = response.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id }
-      })
-
-      return records as ProductDTO[]
+      if (!response.exists()) throw new Error('Products not found')
+      return response.data().items as ProductDTO[]
     } catch (error) {
       console.error('Error getting products: ', error)
       throw error
