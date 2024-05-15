@@ -3,6 +3,7 @@ import { Roboto } from 'next/font/google'
 
 import './globals.css'
 import { Header } from '@/components/molecules'
+import { ProdcutProvider } from '@/context'
 
 const roboto = Roboto({
   weight: ['400', '500', '700', '900'],
@@ -23,8 +24,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={roboto.className}>
-        <Header />
-        {children}
+        <ProdcutProvider>
+          <Header />
+          {children}
+        </ProdcutProvider>
       </body>
     </html>
   )

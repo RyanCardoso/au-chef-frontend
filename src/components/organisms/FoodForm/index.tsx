@@ -1,17 +1,18 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import { useForm, FormProvider } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import { maskPrice } from '@/utils'
-import { CategoryActions, ProductActions } from '@/firebase'
+import { maskPrice, priceInAmericanFormat } from '@/utils'
+import { useProduct } from '@/context'
+import { NewProductDTO } from '@/model'
+import { ProductActions } from '@/firebase'
 import { Button, Dropzone, Input, Select, TextArea } from '@/components/atoms'
 
-import { categoryOptions, menuOptions, schema } from './helpers'
-import { NewProductDTO } from '@/model'
+import { formatMask, formatOptions, menuOptions, schema } from './helpers'
 
 interface FoodFormData {
   typeMenu: 'diurno' | 'noturno'
@@ -24,11 +25,12 @@ interface FoodFormData {
 }
 
 export const FoodForm = () => {
-  const productActions = new ProductActions()
-  const categoryActions = new CategoryActions()
+  const router = useRouter()
   const methods = useForm<FoodFormData>({ resolver: yupResolver(schema) })
   const [loading, setLoading] = useState<boolean>(false)
-  const router = useRouter()
+  const { categoriesData } = useProduct()
+
+  const productActions = new ProductActions()
 
   const {
     watch,
@@ -40,24 +42,6 @@ export const FoodForm = () => {
   } = methods
 
   const imageUrl = watch('image')
-
-  const formatMask = (
-    ev: React.ChangeEvent<HTMLInputElement>,
-    mask: (ev: string) => string,
-  ) => {
-    const { value } = ev.target
-    ev.target.value = mask(value)
-  }
-
-  useEffect(() => {
-    const getCategories = async () => {
-      const categories = await categoryActions.getAll()
-
-      console.log(categories)
-    }
-
-    getCategories()
-  }, [])
 
   const handleChangeDropzone = (ev: File | null) => {
     setValue('image', ev || '')
@@ -81,8 +65,8 @@ export const FoodForm = () => {
     const formattedPayload = {
       ...payload,
       image: imageUrl,
-      price: Number(payload.price),
-      discount: payload.discount ? Number(payload.discount) : 0,
+      price: priceInAmericanFormat(payload.price),
+      discount: payload.discount ? priceInAmericanFormat(payload.discount) : 0,
     } as NewProductDTO
 
     await productActions.create(formattedPayload)
@@ -108,7 +92,7 @@ export const FoodForm = () => {
               <Select
                 className="md:w-[45%]"
                 label="Categória"
-                options={categoryOptions}
+                options={formatOptions(categoriesData, watch('typeMenu'))}
                 {...register('category')}
                 error={errors.category?.message}
               />

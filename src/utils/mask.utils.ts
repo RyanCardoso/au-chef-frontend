@@ -24,7 +24,7 @@ export const maskPrice = (price: string | number, isStyle = true) => {
   return formattedPrice
 }
 
-export const mafskPercentage = (percentage: string | number) => {
+export const maskPercentage = (percentage: string | number) => {
   let formattedPercentage
 
   if (typeof percentage === 'string') {

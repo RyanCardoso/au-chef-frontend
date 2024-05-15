@@ -3,14 +3,17 @@ import {
   doc,
   getDoc,
   getDocs,
-  orderBy,
-  query,
   setDoc,
   updateDoc,
 } from 'firebase/firestore'
 import { db } from '@/firebase'
 
-import { NewCategoryDTO, CategoryDTO, UpdateCategoryDTO } from '@/model/'
+import {
+  NewCategoryDTO,
+  UpdateCategoryDTO,
+  CategoryItemsDTO,
+  CategoryDTO,
+} from '@/model/'
 
 export class CategoryActions {
   async create({ typeMenu, ...payload }: NewCategoryDTO) {
@@ -47,14 +50,14 @@ export class CategoryActions {
   async update(
     id: string,
     payload: UpdateCategoryDTO,
-  ): Promise<CategoryDTO | undefined> {
+  ): Promise<CategoryItemsDTO | undefined> {
     try {
       const docRef = doc(db, `categories/${payload.typeMenu}`, id)
       const update = { ...payload, updatedAt: new Date().toISOString() }
 
       await updateDoc(docRef, update)
 
-      return { ...update, id } as CategoryDTO
+      return { ...update, id } as CategoryItemsDTO
     } catch (error) {
       console.error(`Error updating category: ${id}`, error)
       throw error
@@ -63,14 +66,12 @@ export class CategoryActions {
 
   async getAll(): Promise<CategoryDTO[]> {
     try {
-      const q = query(
-        collection(db, 'categories'),
-        orderBy('createdAt', 'desc'),
-      )
+      const q = collection(db, 'categories')
 
       const response = await getDocs(q)
+
       const records = response.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id }
+        return { ...doc.data() /* , id: doc.id */ }
       })
 
       return records as CategoryDTO[]

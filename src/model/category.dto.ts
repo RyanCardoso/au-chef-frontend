@@ -1,4 +1,4 @@
-export type CategoryDTO = {
+export type CategoryItemsDTO = {
   id: string
   typeMenu: 'diurno' | 'noturno'
   name: string
@@ -7,7 +7,14 @@ export type CategoryDTO = {
   updatedAt: string
 }
 
-export type NewCategoryDTO = Omit<CategoryDTO, 'id' | 'createdAt' | 'updatedAt'>
+export type NewCategoryDTO = Omit<
+  CategoryItemsDTO,
+  'id' | 'createdAt' | 'updatedAt'
+>
 
-export type ResponseCategoryDTO = NewCategoryDTO
-export type UpdateCategoryDTO = CategoryDTO
+export type CategoryDTO = {
+  typeMenu: 'diurno' | 'noturno'
+  items: CategoryItemsDTO[]
+}
+
+export type UpdateCategoryDTO = CategoryItemsDTO
