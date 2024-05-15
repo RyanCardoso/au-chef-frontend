@@ -23,7 +23,7 @@ export const FoodCard = ({ title, description, price, img }: FoodCardProps) => {
           <p className="mt-3 text-sm font-medium">{maskPrice(price)}</p>
         </div>
 
-        <figure className="max-h-36	max-w-36">
+        <figure className="h-36	w-36">
           <Image
             className="h-full w-full rounded-lg object-cover"
             width={400}
